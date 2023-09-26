@@ -1,5 +1,6 @@
 package com.ims.coursespringmongo.resources;
 
+import com.ims.coursespringmongo.domain.Post;
 import com.ims.coursespringmongo.domain.User;
 import com.ims.coursespringmongo.domain.dto.UserDTO;
 import com.ims.coursespringmongo.services.UserService;
@@ -30,6 +31,12 @@ public class UserResource {
     public ResponseEntity<UserDTO> findById(@PathVariable String id){
         User obj = service.findById(id);
         return ResponseEntity.ok().body(new UserDTO(obj));
+    }
+
+    @GetMapping(value = "/{id}/posts")
+    public ResponseEntity<List<Post>> findPostsByUser(@PathVariable String id){
+        User obj = service.findById(id);
+        return ResponseEntity.ok().body(obj.getPosts());
     }
 
     @PostMapping()
