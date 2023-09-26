@@ -36,16 +36,17 @@ public class UserService {
 
     public void update(User obj){
         Optional<User> newObj = repository.findById(obj.getId());
-        updateData(newObj, obj);
-        repository.save(newObj);
+        User user = newObj.get();
+        updateData(user, obj);
+        repository.save(user);
     }
 
     public User fromDTO(UserDTO objDto){
         return new User(objDto.getId(), objDto.getName(), objDto.getEmail());
     }
 
-    private void updateData(Optional<User> newObj, User obj) {
-        newObj.get().setName(obj.getName());
-        newObj.get().setEmail(obj.getEmail());
+    private void updateData(User user, User obj) {
+        user.setName(obj.getName());
+        user.setEmail(obj.getEmail());
     }
 }
