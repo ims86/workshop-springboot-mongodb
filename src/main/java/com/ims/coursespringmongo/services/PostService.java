@@ -6,6 +6,7 @@ import com.ims.coursespringmongo.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,37 +16,22 @@ public class PostService {
     @Autowired
     private PostRepository repository;
 
-    public List<Post> findAll(){
-        return repository.findAll();
-    }
-
     public Post findById(String id){
         Optional<Post> obj = repository.findById(id);
         return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado"));
     }
-    public Post insert(Post obj){
-        return repository.save(obj);
+
+    public List<Post> findByTitle (String text) {
+        //retorna dados com query methodos
+//        return repository.findByTitleContainingIgnoreCase(text);
+
+        //Retorna dados com query simples
+        return repository.findByTitle(text);
     }
 
-    public void delete(String id){
-        //Realiza uma busca pelo id, caso não encontre dispara exceção
-        findById(id);
-        repository.deleteById(id);
+    public List<Post> fullSearch (String text, Date minDate, Date maxDate) {
+        //Add 24hs no maxDate para realizar a busca até meia-noite
+        maxDate = new Date(maxDate.getTime() + 24 * 60 * 60 * 1000);
+        return repository.fullSearch(text, minDate, maxDate);
     }
-
-//    public void update(Post obj){
-//        Optional<Post> newObj = repository.findById(obj.getId());
-//        Post user = newObj.get();
-//        updateData(user, obj);
-//        repository.save(user);
-//    }
-
-//    public Post fromDTO(PostDTO objDto){
-//        return new Post(objDto.getId(), objDto.getName(), objDto.getEmail());
-//    }
-//
-//    private void updateData(Post user, Post obj) {
-//        user.setName(obj.getName());
-//        user.setEmail(obj.getEmail());
-//    }
 }
